@@ -13,12 +13,8 @@ import static org.rev317.min.api.methods.Game.isLoggedIn;
 
 public class MainAction implements Strategy {
     private final int CLICK_INTERVAL = 2306;
-    private final int RANDOM_DELAY = 100;
 
     private final int[] STALL_IDS = {4874, 4875, 4876, 4877, 4878};
-    private int stall_id = 4878;
-
-    private final Point logInButtonLocation = new Point(384,388);
 
     Skill thieving = Skill.THIEVING;
 
@@ -29,14 +25,17 @@ public class MainAction implements Strategy {
 
     @Override
     public void execute() {
+        int stall_id;
+        int thievingLevel = Skill.THIEVING.getLevel();
+        
         try {
-            if(thieving.getLevel() < 50) {
+            if(thievingLevel < 50) {
                 stall_id = STALL_IDS[0];
-            } else if(thieving.getLevel() < 70) {
+            } else if(thievingLevel < 70) {
                 stall_id = STALL_IDS[1];
-            } else if(thieving.getLevel() < 85) {
+            } else if(thievingLevel < 85) {
                 stall_id = STALL_IDS[2];
-            } else if(thieving.getLevel() < 99) {
+            } else if(thievingLevel < 99) {
                 stall_id = STALL_IDS[3];
             } else {
                 stall_id = STALL_IDS[4];
@@ -45,13 +44,13 @@ public class MainAction implements Strategy {
             SceneObject stall = SceneObjects.getClosest(stall_id);
             if(stall == null) {
                 Keyboard.getInstance().sendKeys("::home");
-                Keyboard.getInstance().clickKey(KeyEvent.VK_ENTER);
                 System.out.println("No thieving stall found");
                 Time.sleep(5000);
             } else {
                 stall.interact(SceneObjects.Option.USE);
             }
-            Time.sleep(CLICK_INTERVAL, CLICK_INTERVAL + RANDOM_DELAY);
+            
+            Time.sleep(CLICK_INTERVAL);
         } catch (Exception e){
             e.printStackTrace();
         }
@@ -60,10 +59,11 @@ public class MainAction implements Strategy {
     private boolean relog() {
         for(int i=0; i<3; i++) { // Try to relog 3 times
             Time.sleep(10000);
-            Mouse.getInstance().click(logInButtonLocation);
+            Keyboard.getInstance().clickKey(KeyEvent.VK_ENTER);
             Time.sleep(5000);
             if(isLoggedIn()) return true;
         }
+        
         return false;
     }
 }
