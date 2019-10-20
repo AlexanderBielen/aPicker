@@ -16,8 +16,6 @@ public class MainAction implements Strategy {
 
     private final int[] STALL_IDS = {4874, 4875, 4876, 4877, 4878};
 
-    Skill thieving = Skill.THIEVING;
-
     @Override
     public boolean activate() {
         return isLoggedIn() || relog();
@@ -61,7 +59,7 @@ public class MainAction implements Strategy {
             Time.sleep(10000);
             Keyboard.getInstance().clickKey(KeyEvent.VK_ENTER);
             Time.sleep(5000);
-            if(isLoggedIn()) return true;
+            return isLoggedIn();
         }
         
         return false;
